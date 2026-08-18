@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stone - Online Shopping</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+
+  body {
+    background: #f5f5f5;
+    color: #333;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .top-bar {
+    background: #f68b1e;
+    color: white;
+    text-align: center;
+    padding: 6px;
+    font-size: 13px;
+  }
+
+  .main-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f68b1e;
+    text-decoration: none;
+    letter-spacing: -1px;
+  }
+
+  .search-box {
+    flex: 1;
+    display: flex;
+    max-width: 600px;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #f68b1e;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 15px;
+    outline: none;
+  }
+
+  .search-box button {
+    background: #f68b1e;
+    color: white;
+    border: none;
+    padding: 0 24px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .header-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: #333;
+    position: relative;
+  }
+
+  .icon-btn span.icon {
+    font-size: 22px;
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #f68b1e;
+    color: white;
+    font-size: 11px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  /* ===== CATEGORIES ===== */
+  .categories {
+    background: white;
+    border-bottom: 1px solid #eee;
+  }
+
+  .cat-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 28px;
+    overflow-x: auto;
+  }
+
+  .cat-item {
+    padding: 14px 0;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    color: #555;
+    border-bottom: 3px solid transparent;
+  }
+
+  .cat-item:hover,
+  .cat-item.active {
+    color: #f68b1e;
+    border-bottom-color: #f68b1e;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+
+  .hero-banner {
+    background: linear-gradient(135deg, #f68b1e, #e67e00);
+    border-radius: 12px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-text h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+  }
+
+  .hero-text p {
+    font-size: 18px;
+    opacity: 0.95;
+    margin-bottom: 20px;
+  }
+
+  .hero-btn {
+    background: white;
+    color: #f68b1e;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .section-header h2 {
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .see-all {
+    color: #f68b1e;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* ===== PRODUCTS GRID ===== */
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: 1px solid #eee;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    transform: translateY(-4px);
+  }
+
+  .product-img {
+    height: 200px;
+    background: #f8f8f8;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #f68b1e;
+    color: white;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    z-index: 2;
+  }
+
+  .product-info {
+    padding: 14px;
+  }
+
+  .product-name {
+    font-size: 14px;
+    margin-bottom: 8px;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .old-price {
+    font-size: 13px;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 6px;
+  }
+
+  .rating {
+    font-size: 12px;
+    color: #f68b1e;
+    margin: 6px 0;
+  }
+
+  .add-btn {
+    width: 100%;
+    background: #f68b1e;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+
+  .add-btn:hover {
+    background: #e67e00;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #282828;
+    color: #ccc;
+    margin-top: 50px;
+    padding: 40px 20px 20px;
+  }
+
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+  }
+
+  .footer-col h4 {
+    color: white;
+    margin-bottom: 15px;
+  }
+
+  .footer-col a {
+    display: block;
+    color: #aaa;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .footer-col a:hover {
+    color: #f68b1e;
+  }
+
+  .copyright {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    font-size: 13px;
+  }
+
+  @media (max-width: 768px) {
+    .main-header {
+      flex-wrap: wrap;
+    }
+    .search-box {
+      order: 3;
+      width: 100%;
+      max-width: 100%;
+    }
+    .hero-banner {
+      height: auto;
+      padding: 30px 20px;
+      flex-direction: column;
+      text-align: center;
+    }
+    .hero-text h1 {
+      font-size: 28px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  Free delivery on orders above ₦50,000 | Welcome to Stone
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="main-header">
+    <a href="#" class="logo">STONE</a>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search products, brands and categories...">
+      <button onclick="searchProducts()">SEARCH</button>
+    </div>
+
+    <div class="header-icons">
+      <div class="icon-btn">
+        <span class="icon">👤</span>
+        <span>Account</span>
+      </div>
+      <div class="icon-btn">
+        <span class="icon">❤️</span>
+        <span>Wishlist</span>
+      </div>
+      <div class="icon-btn" onclick="showCart()">
+        <span class="icon">🛒</span>
+        <span>Cart</span>
+        <div class="cart-count" id="cartCount">0</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <div class="cat-container">
+    <div class="cat-item active">All</div>
+    <div class="cat-item">Phones & Tablets</div>
+    <div class="cat-item">Fashion</div>
+    <div class="cat-item">Home & Office</div>
+    <div class="cat-item">Electronics</div>
+    <div class="cat-item">Health & Beauty</div>
+    <div class="cat-item">Supermarket</div>
+    <div class="cat-item">Computing</div>
+    <div class="cat-item">Baby Products</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-banner">
+    <div class="hero-text">
+      <h1>Flash Sales Live!</h1>
+      <p>Up to 70% off on selected items. Limited time only.</p>
+      <button class="hero-btn">Shop Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- FLASH SALES -->
+<div class="section">
+  <div class="section-header">
+    <h2>⚡ Flash Sales</h2>
+    <a href="#" class="see-all">See All →</a>
+  </div>
+  <div class="products" id="flashProducts"></div>
+</div>
+
+<!-- ALL PRODUCTS -->
+<div class="section">
+  <div class="section-header">
+    <h2>🔥 Top Deals</h2>
+    <a href="#" class="see-all">See All →</a>
+  </div>
+  <div class="products" id="allProducts"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-col">
+      <h4>About Stone</h4>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Terms and Conditions</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-col">
+      <h4>Useful Links</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Contact Us</a>
+      <a href="#">How to Order</a>
+      <a href="#">Return Policy</a>
+    </div>
+    <div class="footer-col">
+      <h4>Make Money</h4>
+      <a href="#">Sell on Stone</a>
+      <a href="#">Become an Affiliate</a>
+      <a href="#">Advertise with Us</a>
+    </div>
+    <div class="footer-col">
+      <h4>Download App</h4>
+      <a href="#">Google Play</a>
+      <a href="#">App Store</a>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2026 Stone. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  const products = [
+    { id: 1, name: "Samsung Galaxy A15 4G", price: 145000, oldPrice: 185000, discount: 22, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop", rating: 4.5 },
+    { id: 2, name: "Infinix Hot 40i", price: 98000, oldPrice: 125000, discount: 22, image: "https://images.unsplash.com/photo-1592890288564-7667945928b4?w=400&h=400&fit=crop", rating: 4.3 },
+    { id: 3, name: "Men's Casual Sneakers", price: 12500, oldPrice: 18000, discount: 31, image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop", rating: 4.2 },
+    { id: 4, name: "Women's Leather Handbag", price: 8900, oldPrice: 15000, discount: 41, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=400&fit=crop", rating: 4.6 },
+    { id: 5, name: "Hisense 43\" Smart TV", price: 185000, oldPrice: 245000, discount: 24, image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop", rating: 4.4 },
+    { id: 6, name: "Binatone Blender 1.5L", price: 18500, oldPrice: 25000, discount: 26, image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop", rating: 4.1 },
+    { id: 7, name: "HP Laptop 15s - 8GB RAM", price: 320000, oldPrice: 380000, discount: 16, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop", rating: 4.7 },
+    { id: 8, name: "Nivea Soft Moisturizing Cream", price: 2500, oldPrice: 3500, discount: 29, image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop", rating: 4.5 },
+    { id: 9, name: "Oraimo FreePods 4", price: 14500, oldPrice: 22000, discount: 34, image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop", rating: 4.3 },
+    { id: 10, name: "Kitchen Knife Set 6pcs", price: 7800, oldPrice: 12000, discount: 35, image: "https://images.unsplash.com/photo-1593618998160-e34014e67546?w=400&h=400&fit=crop", rating: 4.0 },
+    { id: 11, name: "Baby Diapers Size 4", price: 9500, oldPrice: 13000, discount: 27, image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&h=400&fit=crop", rating: 4.6 },
+    { id: 12, name: "Power Bank 20000mAh", price: 12500, oldPrice: 18000, discount: 31, image: "https://images.unsplash.com/photo-1609091839311-b248b877fd62?w=400&h=400&fit=crop", rating: 4.4 },
+  ];
+
+  let cart = [];
+
+  function formatPrice(price) {
+    return "₦" + price.toLocaleString();
+  }
+
+  function createProductCard(product) {
+    return `
+      <div class="product-card">
+        <div class="product-img">
+          <span class="discount">-${product.discount}%</span>
+          <img src="${product.image}" alt="${product.name}" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-name">${product.name}</div>
+          <div class="price">${formatPrice(product.price)} <span class="old-price">${formatPrice(product.oldPrice)}</span></div>
+          <div class="rating">★★★★☆ ${product.rating}</div>
+          <button class="add-btn" onclick="addToCart(${product.id})">ADD TO CART</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderProducts() {
+    const flash = products.slice(0, 6);
+    const all = products;
+
+    document.getElementById("flashProducts").innerHTML = flash.map(createProductCard).join("");
+    document.getElementById("allProducts").innerHTML = all.map(createProductCard).join("");
+  }
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    cart.push(product);
+    document.getElementById("cartCount").textContent = cart.length;
+    alert(`${product.name} added to cart!`);
+  }
+
+  function showCart() {
+    if (cart.length === 0) {
+      alert("Your cart is empty");
+      return;
+    }
+    let msg = "Cart Items:\n\n";
+    let total = 0;
+    cart.forEach((item, i) => {
+      msg += `${i+1}. ${item.name} - ${formatPrice(item.price)}\n`;
+      total += item.price;
+    });
+    msg += `\nTotal: ${formatPrice(total)}`;
+    alert(msg);
+  }
+
+  function searchProducts() {
+    const term = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+    
+    document.getElementById("flashProducts").innerHTML = "";
+    document.getElementById("allProducts").innerHTML = filtered.map(createProductCard).join("") || "<p>No products found</p>";
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>
